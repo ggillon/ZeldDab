@@ -2,7 +2,7 @@
 
 Phaser 4 + TypeScript + Vite scaffold. The game renders at an internal **640×480** and scales up by a whole-number factor with nearest-neighbor filtering so pixels stay crisp. Extra space is letterboxed or pillarboxed.
 
-Right now the playable loop is a cyan square bouncing around the screen — proof that boot, render, and update are working before any menus, assets, or extra systems.
+Move a cyan square with **arrow keys or WASD** in 8 directions (cardinals and diagonals). A yellow triangle on the square shows facing, including diagonals, and keeps pointing the last way you moved when you stop.
 
 ## Install
 
@@ -41,5 +41,6 @@ src/main.ts             # boots Phaser and integer scaling
 src/game/constants.ts   # 640×480
 src/game/config.ts      # Phaser game config
 src/game/integerScale.ts
+src/game/player.ts
 src/game/scenes/PlayScene.ts
 ```
