@@ -11,30 +11,15 @@ export const PLAYER_SPEED = 120;
  */
 export class Player {
   readonly container: Phaser.GameObjects.Container;
-  private readonly facingMarker: Phaser.GameObjects.Triangle;
+  private readonly gfx: Phaser.GameObjects.Graphics;
   facingX = 0;
   facingY = 1;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
-    const body = scene.add.rectangle(0, 0, PLAYER_SIZE, PLAYER_SIZE, 0x3de0ff);
-    body.setOrigin(0.5, 0.5);
-
-    // Tip points east at angle 0 so setAngle(atan2(y, x)) matches facing.
-    this.facingMarker = scene.add.triangle(
-      0,
-      0,
-      12,
-      0,
-      -6,
-      -8,
-      -6,
-      8,
-      0xffcc33,
-    );
-
-    this.container = scene.add.container(x, y, [body, this.facingMarker]);
+    this.gfx = scene.add.graphics();
+    this.container = scene.add.container(x, y, [this.gfx]);
     this.container.setSize(PLAYER_SIZE, PLAYER_SIZE);
-    this.applyFacing();
+    this.redraw();
   }
 
   get x(): number {
@@ -48,7 +33,7 @@ export class Player {
   setFacing(dx: number, dy: number): void {
     this.facingX = dx;
     this.facingY = dy;
-    this.applyFacing();
+    this.redraw();
   }
 
   moveTo(x: number, y: number): void {
@@ -59,9 +44,26 @@ export class Player {
     );
   }
 
-  private applyFacing(): void {
-    this.facingMarker.setAngle(
-      Phaser.Math.RadToDeg(Math.atan2(this.facingY, this.facingX)),
+  private redraw(): void {
+    const half = PLAYER_SIZE / 2;
+    this.gfx.clear();
+    this.gfx.fillStyle(0x3de0ff);
+    this.gfx.fillRect(-half, -half, PLAYER_SIZE, PLAYER_SIZE);
+
+    const length = Math.hypot(this.facingX, this.facingY) || 1;
+    const nx = this.facingX / length;
+    const ny = this.facingY / length;
+    const px = -ny;
+    const py = nx;
+
+    this.gfx.fillStyle(0xffcc33);
+    this.gfx.fillTriangle(
+      nx * 12,
+      ny * 12,
+      nx * -5 + px * 7,
+      ny * -5 + py * 7,
+      nx * -5 - px * 7,
+      ny * -5 - py * 7,
     );
   }
 }
